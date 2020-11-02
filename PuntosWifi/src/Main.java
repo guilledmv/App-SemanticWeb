@@ -28,7 +28,7 @@ public class Main {
         
         space.getListSpace("hasName");
         space.getListSpacesNeighboord("Aluche");
-        space.getListAttSpace("Biblioteca Pï¿½blica Municipal - Aluche");
+        space.getListAttSpace("Biblioteca Pública Municipal - Aluche");
 	}	
 
 }
