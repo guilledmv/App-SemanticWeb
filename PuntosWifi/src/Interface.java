@@ -147,9 +147,11 @@ public class Interface extends JFrame implements ActionListener {
     			Location loc = new Location();
     			String seleccion2 = select2.getSelectedItem().toString();
     	        
-    	        ArrayList<String> list3 = loc.getListNeighborhood(seleccion2);
+    	       		ArrayList<String> list3 = loc.getListNeighborhood(seleccion2);
     			fillList3(list3);
-    			 
+    			if (cont != 0) {
+    	        	select4.removeAllItems();
+    	       		} 
 
     		}
 
@@ -182,7 +184,7 @@ public class Interface extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String seleccion = select.getSelectedItem().toString();                              
         
-        String seleccion2 = select2.getSelectedItem().toString();
+        String seleccion4 = select4.getSelectedItem().toString();
         
      
 
@@ -207,7 +209,7 @@ public class Interface extends JFrame implements ActionListener {
         	if(cont == 2) {
         		
         		
-            	createWindow2(edificio,localizacion, seleccion);
+            	createWindow2(edificio,localizacion, seleccion4);
 
         		
         	}
