@@ -22,7 +22,7 @@ public class Main {
 		Location location = new Location();
 		
 		
-		interfaz.init(space.getListSpace("hasName"),location.getListDistrict("madrid"));
+		interfaz.init(space.getListSpace("hasName"),location.getListDistrict());
         interfaz.setResizable(true);
         interfaz.setVisible(true);    
         
