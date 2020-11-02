@@ -25,12 +25,12 @@ public class Location {
 	// Main for testing our methods
 	public static void main(String [] args) {
 		
-		//getListDistrict("madrid");
+		//getListDistrict();
 		//getListNeighborhood("Latina");
 		//getListAttLocation("<https://freewifizones/madrid/location/435820-4471982>");
 	}
 	
-	public static ArrayList<String> getListDistrict(String name) {
+	public static ArrayList<String> getListDistrict() {
 		
 		ArrayList<String> districtList = new ArrayList<String>();
 		
@@ -46,7 +46,7 @@ public class Location {
 				+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
 				+ "SELECT DISTINCT ?name \n"
 				+ "    WHERE {\n"
-				+ "        { ?pred <https://freewifizones/" + name + "/location#" + loc.get_district_() +"> ?name \n"
+				+ "        { ?pred <https://freewifizones/madrid/location#" + loc.get_district_() +"> ?name \n"
 				+ "}"
 				+ "}";
 		
@@ -57,7 +57,7 @@ public class Location {
 			ResultSet results = qexec.execSelect();
 			while(results.hasNext()) {
 				QuerySolution sol = results.nextSolution();
-				districtList.add(sol.toString().substring(10,sol.toString().length()-2));  //chicos ser�a 10 porque sino dejamos un espacio en blanco justo al principio de cada nombre
+				districtList.add(sol.toString().substring(11,sol.toString().length()-3));
 			}
 			System.out.println(districtList);
 		} finally {
@@ -75,15 +75,13 @@ public class Location {
 			OntModel model = ModelFactory.createOntologyModel();
 			
 			model.read(inputFile,null,"N-TRIPLES");
-			
-			System.out.println(loc.get_neighborhood_());
-						
+									
 			String queryInstruction = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
 					+ "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"
 					+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
 					+ "SELECT DISTINCT ?name \n"
 					+ "    WHERE {\n"
-					+ "        { ?obj <https://freewifizones/madrid/location#district>" + "\"" + name + "\"" + ". \n"
+					+ "        { ?obj <https://freewifizones/madrid/location#district>"+"\"" + name + "\""+".\n"
 					+ "        { ?obj <https://freewifizones/madrid/location#neighborhood> ?name .\n"
 					+ "}"
 					+ "}"
@@ -96,7 +94,7 @@ public class Location {
 				ResultSet results = qexec.execSelect();
 				while(results.hasNext()) {
 					QuerySolution sol = results.nextSolution();
-					neighborhoodList.add(sol.toString().substring(10,sol.toString().length()-2));
+					neighborhoodList.add(sol.toString().substring(11,sol.toString().length()-3));
 				}
 				System.out.println(neighborhoodList);
 			} finally {
@@ -328,21 +326,21 @@ public class Location {
 				QuerySolution sol15 = results15.nextSolution();
 
 				// Adding all attributes to our result list
-				attList.add(sol1.toString().substring(10,sol1.toString().length()-2));
-				attList.add(sol2.toString().substring(10,sol2.toString().length()-2));
-				attList.add(sol3.toString().substring(10,sol3.toString().length()-2));
-				attList.add(sol4.toString().substring(10,sol4.toString().length()-2));
-				attList.add(sol5.toString().substring(10,sol5.toString().length()-2));
-				attList.add(sol6.toString().substring(10,sol6.toString().length()-2));
-				attList.add(sol7.toString().substring(10,sol7.toString().length()-2));
-				attList.add(sol8.toString().substring(10,sol8.toString().length()-2));
-				attList.add(sol9.toString().substring(10,sol9.toString().length()-2));
-				attList.add(sol10.toString().substring(10,sol10.toString().length()-2));
-				attList.add(sol11.toString().substring(10,sol11.toString().length()-2));
-				attList.add(sol12.toString().substring(10,sol12.toString().length()-2));
-				attList.add(sol13.toString().substring(10,sol13.toString().length()-2));
-				attList.add(sol14.toString().substring(10,sol14.toString().length()-2));
-				attList.add(sol15.toString().substring(10,sol15.toString().length()-2));
+				attList.add(sol1.toString().substring(11,sol1.toString().length()-3));
+				attList.add(sol2.toString().substring(11,sol2.toString().length()-3));
+				attList.add(sol3.toString().substring(11,sol3.toString().length()-3));
+				attList.add(sol4.toString().substring(11,sol4.toString().length()-3));
+				attList.add(sol5.toString().substring(11,sol5.toString().length()-3));
+				attList.add(sol6.toString().substring(11,sol6.toString().length()-3));
+				attList.add(sol7.toString().substring(11,sol7.toString().length()-3));
+				attList.add(sol8.toString().substring(11,sol8.toString().length()-3));
+				attList.add(sol9.toString().substring(11,sol9.toString().length()-3));
+				attList.add(sol10.toString().substring(11,sol10.toString().length()-3));
+				attList.add(sol11.toString().substring(11,sol11.toString().length()-3));
+				attList.add(sol12.toString().substring(11,sol12.toString().length()-3));
+				attList.add(sol13.toString().substring(11,sol13.toString().length()-3));
+				attList.add(sol14.toString().substring(11,sol14.toString().length()-3));
+				attList.add(sol15.toString().substring(11,sol15.toString().length()-3));
 				
 
 			}
