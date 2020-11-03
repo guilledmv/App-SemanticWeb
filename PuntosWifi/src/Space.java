@@ -167,7 +167,7 @@ public class Space {
 					+ "PREFIX owl: <http://www.w3.org/2002/07/owl#> \n"
 					+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \n"
 					+ "SELECT DISTINCT ?name WHERE { \n"
-					+ "        { ?pred <https://freewifizones/madrid/space#" + nombre + "> ?name. \n"		
+					+ "        { ?pred <https://freewifizones/madrid/space#hasName> ?name. \n"		
 					+ "}"
 					+ "}";
 		Query query= QueryFactory.create(queryString);
@@ -530,7 +530,7 @@ public class Space {
 		        soln = results.nextSolution();
 		       // array_nombres.add(soln.toString().substring(10,soln.toString().length()-2));
 		        space.setHasLocation(soln.toString().substring(11,soln.toString().length()-3));
-		        //System.out.println(soln);
+		        System.out.println(soln);
 		    }
 		    
 		} finally {

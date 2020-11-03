@@ -15,27 +15,18 @@ public class Location {
 	private String coordinates, geographicalCoordinates;
 	private String address, addressName, addressType, typeNum, floor, orientation, latitude, longitude,
 						locality, province;
-	private static String neighborhood;
+	private String neighborhood;
 	private String district;
 	private String num, cp, xcoordinate, ycoordinate;
 	
 	// Input file for testing
 	private static final String inputFile = "output-with-links.nt";
 	
-	// Main for testing our methods
-	public static void main(String [] args) {
-		
-		//getListDistrict();
-		//getListNeighborhood("Latina");
-		//getListAttLocation("<https://freewifizones/madrid/location/435820-4471982>");
-	}
-	
-	public static ArrayList<String> getListDistrict() {
+	// Method which returns an ArrayList with districts of madrid
+	public ArrayList<String> getListDistrict() {
 		
 		ArrayList<String> districtList = new ArrayList<String>();
-		
-		Location loc = new Location();
-		
+				
 		OntModel model = ModelFactory.createOntologyModel();
 		
 		model.read(inputFile,null,"N-TRIPLES");
@@ -46,7 +37,7 @@ public class Location {
 				+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
 				+ "SELECT DISTINCT ?name \n"
 				+ "    WHERE {\n"
-				+ "        { ?pred <https://freewifizones/madrid/location#" + loc.get_district_() +"> ?name \n"
+				+ "        { ?pred <https://freewifizones/madrid/location#district> ?name \n"
 				+ "}"
 				+ "}";
 		
@@ -66,12 +57,11 @@ public class Location {
 		return districtList;
 	}
 	
-	public static ArrayList<String> getListNeighborhood (String name) {
+	// Method which returns an Arraylist of neighbohood. String name = Name of district
+	public ArrayList<String> getListNeighborhood (String name) {
 			
 			ArrayList<String> neighborhoodList = new ArrayList<String>();
-			
-			Location loc = new Location();
-			
+						
 			OntModel model = ModelFactory.createOntologyModel();
 			
 			model.read(inputFile,null,"N-TRIPLES");
@@ -102,14 +92,46 @@ public class Location {
 			}
 			return neighborhoodList;
 		}
-		
 	
-	public static ArrayList<String> getListAttLocation(String name){
-		
-		ArrayList<String> attList = new ArrayList<String>();
-		
-		Location loc = new Location();
-		
+	// Method which return uri location for obtain attributes of a library. String name = Biblioteca ...
+	public String getCoordinates(String name) {
+        Query query;
+        QueryExecution qexec; 
+        ResultSet results;
+        QuerySolution soln;
+        OntModel model = ModelFactory.createOntologyModel();
+        model.read(inputFile,null,"N-TRIPLES");
+        String res = null;
+        String query_hasLocation = 
+                "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n"
+                        + "PREFIX owl: <http://www.w3.org/2002/07/owl#> \n"
+                        + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \n"
+                        + "SELECT DISTINCT ?pred ?name WHERE { \n"
+                        +          "{ ?obj <https://freewifizones/madrid/space#hasName>" + "\"" + name + "\"" + ". \n"
+                        + "           ?obj <https://freewifizones/madrid/space#hasLocation> ?name. \n"
+                        + "}"
+                        + "}";
+
+        query =    QueryFactory.create(query_hasLocation);
+        qexec = QueryExecutionFactory.create(query, model);
+
+        try {
+            results = qexec.execSelect();
+            while ( results.hasNext()){
+                soln = results.nextSolution();
+                res = "<"+ soln.toString().substring(11,soln.toString().length()-3) +">";
+            }
+            System.out.println(res);
+        } finally {
+            qexec.close();
+          }
+
+        return res;
+    }
+
+	// Method which returns in getters the attributes for a building. String name = getCoordinates(Biblioteca...)
+	public void getListAttLocation(String name){
+								
 		OntModel model = ModelFactory.createOntologyModel();
 		
 		model.read(inputFile,null,"N-TRIPLES");
@@ -120,7 +142,7 @@ public class Location {
 				+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
 				+ "SELECT DISTINCT ?name \n"
 				+ "    WHERE {\n"
-				+ "        { "+ name + "<https://freewifizones/madrid/location#"+ loc.getAddress() + ">" + "?name" + ".\n"
+				+ "        { "+ name + "<https://freewifizones/madrid/location#address>" +"?name" + ".\n"
 				+ "}"
 				+ "}";
 		
@@ -130,7 +152,7 @@ public class Location {
 				+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
 				+ "SELECT DISTINCT ?name \n"
 				+ "    WHERE {\n"
-				+ "        { "+ name + "<https://freewifizones/madrid/location#"+ loc.getAddressName() + ">" + "?name" + ".\n"
+				+ "        { "+ name + "<https://freewifizones/madrid/location#addressName>" + "?name" + ".\n"
 				+ "}"
 				+ "}";
 		
@@ -140,7 +162,7 @@ public class Location {
 				+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
 				+ "SELECT DISTINCT ?name \n"
 				+ "    WHERE {\n"
-				+ "        { "+ name + "<https://freewifizones/madrid/location#"+ loc.getAddressType() + ">" + "?name" + ".\n"
+				+ "        { "+ name + "<https://freewifizones/madrid/location#addressType>" + "?name" + ".\n"
 				+ "}"
 				+ "}";
 		// Query for typeNum
@@ -149,7 +171,7 @@ public class Location {
 				+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
 				+ "SELECT DISTINCT ?name \n"
 				+ "    WHERE {\n"
-				+ "        { "+ name + "<https://freewifizones/madrid/location#"+ loc.getTypeNum() + ">" + "?name" + ".\n"
+				+ "        { "+ name + "<https://freewifizones/madrid/location#typeNum>" + "?name" + ".\n"
 				+ "}"
 				+ "}";
 		// Query for Num
@@ -158,7 +180,7 @@ public class Location {
 				+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
 				+ "SELECT DISTINCT ?name \n"
 				+ "    WHERE {\n"
-				+ "        { "+ name + "<https://freewifizones/madrid/location#"+ loc.getNum() + ">" + "?name" + ".\n"
+				+ "        { "+ name + "<https://freewifizones/madrid/location#num>" + "?name" + ".\n"
 				+ "}"
 				+ "}";
 		// Query for locality
@@ -167,7 +189,7 @@ public class Location {
 				+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
 				+ "SELECT DISTINCT ?name \n"
 				+ "    WHERE {\n"
-				+ "        { "+ name + "<https://freewifizones/madrid/location#"+ loc.get_locality_() + ">" + "?name" + ".\n"
+				+ "        { "+ name + "<https://freewifizones/madrid/location#locality>" + "?name" + ".\n"
 				+ "}"
 				+ "}";
 		// Query for province
@@ -176,7 +198,7 @@ public class Location {
 				+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
 				+ "SELECT DISTINCT ?name \n"
 				+ "    WHERE {\n"
-				+ "        { "+ name + "<https://freewifizones/madrid/location#"+ loc.get_province_() + ">" + "?name" + ".\n"
+				+ "        { "+ name + "<https://freewifizones/madrid/location#province>" + "?name" + ".\n"
 				+ "}"
 				+ "}";
 		// Query for postal code
@@ -185,7 +207,7 @@ public class Location {
 				+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
 				+ "SELECT DISTINCT ?name \n"
 				+ "    WHERE {\n"
-				+ "        { "+ name + "<https://freewifizones/madrid/location#"+ loc.getCp() + ">" + "?name" + ".\n"
+				+ "        { "+ name + "<https://freewifizones/madrid/location#cp>" + "?name" + ".\n"
 				+ "}"
 				+ "}";
 		// Query for neighborhood
@@ -194,7 +216,7 @@ public class Location {
 				+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
 				+ "SELECT DISTINCT ?name \n"
 				+ "    WHERE {\n"
-				+ "        { "+ name + "<https://freewifizones/madrid/location#"+ loc.get_neighborhood_() + ">" + "?name" + ".\n"
+				+ "        { "+ name + "<https://freewifizones/madrid/location#neighborhood>" + "?name" + ".\n"
 				+ "}"
 				+ "}";
 		// Query for district
@@ -203,7 +225,7 @@ public class Location {
 				+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
 				+ "SELECT DISTINCT ?name \n"
 				+ "    WHERE {\n"
-				+ "        { "+ name + "<https://freewifizones/madrid/location#"+ loc.get_district_() + ">" + "?name" + ".\n"
+				+ "        { "+ name + "<https://freewifizones/madrid/location#district>" + "?name" + ".\n"
 				+ "}"
 				+ "}";
 		// Query for xcoordinate
@@ -212,7 +234,7 @@ public class Location {
 				+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
 				+ "SELECT DISTINCT ?name \n"
 				+ "    WHERE {\n"
-				+ "        { "+ name + "<https://freewifizones/madrid/location#"+ loc.getXcoordinate() + ">" + "?name" + ".\n"
+				+ "        { "+ name + "<https://freewifizones/madrid/location#xcoordinate>" + "?name" + ".\n"
 				+ "}"
 				+ "}";
 		// Query for ycoordinate
@@ -221,7 +243,7 @@ public class Location {
 				+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
 				+ "SELECT DISTINCT ?name \n"
 				+ "    WHERE {\n"
-				+ "        { "+ name + "<https://freewifizones/madrid/location#"+ loc.getYcoordinate() + ">" + "?name" + ".\n"
+				+ "        { "+ name + "<https://freewifizones/madrid/location#ycoordinate>" + "?name" + ".\n"
 				+ "}"
 				+ "}";
 		// Query for latitude
@@ -230,7 +252,7 @@ public class Location {
 				+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
 				+ "SELECT DISTINCT ?name \n"
 				+ "    WHERE {\n"
-				+ "        { "+ name + "<https://freewifizones/madrid/location#"+ loc.getLatitude() + ">" + "?name" + ".\n"
+				+ "        { "+ name + "<https://freewifizones/madrid/location#latitude>" + "?name" + ".\n"
 				+ "}"
 				+ "}";
 		// Query for longitude
@@ -239,7 +261,7 @@ public class Location {
 				+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
 				+ "SELECT DISTINCT ?name \n"
 				+ "    WHERE {\n"
-				+ "        { "+ name + "<https://freewifizones/madrid/location#"+ loc.getLongitude() + ">" + "?name" + ".\n"
+				+ "        { "+ name + "<https://freewifizones/madrid/location#longitude>" + "?name" + ".\n"
 				+ "}"
 				+ "}";
 		// Query for geographicalCoordinates
@@ -248,7 +270,7 @@ public class Location {
 				+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
 				+ "SELECT DISTINCT ?name \n"
 				+ "    WHERE {\n"
-				+ "        { "+ name + "<https://freewifizones/madrid/location#"+ loc.getGeographicalCoordinates() + ">" + "?name" + ".\n"
+				+ "        { "+ name + "<https://freewifizones/madrid/location#geographicalCoordinates>" + "?name" + ".\n"
 				+ "}"
 				+ "}";
 		
@@ -325,26 +347,26 @@ public class Location {
 				QuerySolution sol14= results14.nextSolution();
 				QuerySolution sol15 = results15.nextSolution();
 
-				// Adding all attributes to our result list
-				attList.add(sol1.toString().substring(11,sol1.toString().length()-3));
-				attList.add(sol2.toString().substring(11,sol2.toString().length()-3));
-				attList.add(sol3.toString().substring(11,sol3.toString().length()-3));
-				attList.add(sol4.toString().substring(11,sol4.toString().length()-3));
-				attList.add(sol5.toString().substring(11,sol5.toString().length()-3));
-				attList.add(sol6.toString().substring(11,sol6.toString().length()-3));
-				attList.add(sol7.toString().substring(11,sol7.toString().length()-3));
-				attList.add(sol8.toString().substring(11,sol8.toString().length()-3));
-				attList.add(sol9.toString().substring(11,sol9.toString().length()-3));
-				attList.add(sol10.toString().substring(11,sol10.toString().length()-3));
-				attList.add(sol11.toString().substring(11,sol11.toString().length()-3));
-				attList.add(sol12.toString().substring(11,sol12.toString().length()-3));
-				attList.add(sol13.toString().substring(11,sol13.toString().length()-3));
-				attList.add(sol14.toString().substring(11,sol14.toString().length()-3));
-				attList.add(sol15.toString().substring(11,sol15.toString().length()-3));
+				// Set the attributes in its setter
+				setAddress(sol1.toString().substring(11,sol1.toString().length()-3));
+                setAddressName(sol2.toString().substring(11,sol2.toString().length()-3));
+                setAddressType(sol3.toString().substring(11,sol3.toString().length()-3));
+                setTypeNum(sol4.toString().substring(11,sol4.toString().length()-3));
+                setNum(sol5.toString().substring(11,sol5.toString().length()-3));
+                set_locality_(sol6.toString().substring(11,sol6.toString().length()-3));
+                set_province_(sol7.toString().substring(11,sol7.toString().length()-3));
+                setCp(sol8.toString().substring(11,sol8.toString().length()-3));
+                set_neighborhood_(sol9.toString().substring(11,sol9.toString().length()-3));
+                set_district_(sol10.toString().substring(11,sol10.toString().length()-3));
+                setXcoordinate(sol11.toString().substring(11,sol11.toString().length()-3));
+                setYcoordinate(sol12.toString().substring(11,sol12.toString().length()-3));
+                setLatitude(sol13.toString().substring(11,sol13.toString().length()-3));
+                setLongitude(sol14.toString().substring(11,sol14.toString().length()-3));
+                setGeographicalCoordinates(sol15.toString().substring(11,sol15.toString().length()-3));
 				
 
 			}
-			System.out.println(attList);
+			
 		} finally {
 			// Closing all querys
 			qexec1.close();
@@ -363,116 +385,114 @@ public class Location {
 			qexec14.close();
 			qexec15.close();
 
-		}
-		return attList;
-		
+		}		
 	}
 	
 	// Getters and Setters
 	public String getCoordinates() {
-		return "coordinates";
+		return coordinates;
 	}
 	public void setCoordinates(String coordinates) {
 		this.coordinates = coordinates;
 	}
 	public String getGeographicalCoordinates() {
-		return "geographicalCoordinates";
+		return geographicalCoordinates;
 	}
 	public void setGeographicalCoordinates(String geographicalCoordinates) {
 		this.geographicalCoordinates = geographicalCoordinates;
 	}
 	public String getAddress() {
-		return "address";
+		return address;
 	}
 	public void setAddress(String address) {
 		this.address = address;
 	}
 	public String getAddressName() {
-		return "addressName";
+		return addressName;
 	}
 	public void setAddressName(String addressName) {
 		this.addressName = addressName;
 	}
 	public String getAddressType() {
-		return "addressType";
+		return addressType;
 	}
 	public void setAddressType(String addressType) {
 		this.addressType = addressType;
 	}
 	public String getTypeNum() {
-		return "typeNum";
+		return typeNum;
 	}
 	public void setTypeNum(String typeNum) {
 		this.typeNum = typeNum;
 	}
 	public String getFloor() {
-		return "floor";
+		return floor;
 	}
 	public void setFloor(String floor) {
 		this.floor = floor;
 	}
 	public String getOrientation() {
-		return "orientation";
+		return orientation;
 	}
 	public void setOrientation(String orientation) {
 		this.orientation = orientation;
 	}
 	public String getLatitude() {
-		return "latitude";
+		return latitude;
 	}
 	public void setLatitude(String latitude) {
 		this.latitude = latitude;
 	}
 	public String getLongitude() {
-		return "longitude";
+		return longitude;
 	}
 	public void setLongitude(String longitude) {
 		this.longitude = longitude;
 	}
 	public String get_locality_() {
-		return "locality";
+		return locality;
 	}
 	public void set_locality_(String _locality_) {
 		this.locality = _locality_;
 	}
 	public String get_province_() {
-		return "province";
+		return province;
 	}
 	public void set_province_(String _province_) {
 		this.province = _province_;
 	}
 	public String get_neighborhood_() {
-		return "neighborhood";
+		return neighborhood;
 	}
 	public void set_neighborhood_(String _neighborhood_) {
 		this.neighborhood = _neighborhood_;
 	}
 	public String get_district_() {
-		return "district";
+		return district;
 	}
 	public void set_district_(String _district_) {
 		this.district = _district_;
 	}
 	public String getNum() {
-		return "num";
+		return num;
 	}
 	public void setNum(String num) {
 		this.num = num;
 	}
 	public String getCp() {
-		return "cp";
+		return cp;
 	}
 	public void setCp(String cp) {
 		this.cp = cp;
 	}
 	public String getXcoordinate() {
-		return "xcoordinate";
+		return xcoordinate;
 	}
 	public void setXcoordinate(String xcoordinate) {
 		this.xcoordinate = xcoordinate;
 	}
 	public String getYcoordinate() {
-		return "ycoordinate";
+		return ycoordinate;
 	}
 	public void setYcoordinate(String ycoordinate) {
 		this.ycoordinate = ycoordinate;
