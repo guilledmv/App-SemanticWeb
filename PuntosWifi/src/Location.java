@@ -9,6 +9,7 @@ import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.ModelFactory;
 
+
 public class Location {
 	
 	// Variables for Location Class
